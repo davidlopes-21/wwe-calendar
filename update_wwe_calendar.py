@@ -1,6 +1,7 @@
 from ics import Calendar, Event
 from datetime import datetime, timedelta
 import pytz
+from uuid import uuid4
 
 # Timezone de Lisboa
 tz = pytz.timezone("Europe/Lisbon")
@@ -51,6 +52,9 @@ for name, date_str in ppvs:
     event.duration = timedelta(hours=3)
     event.description = f"Evento especial WWE - {name}"
     cal.events.add(event)
+
+# Forçar sempre alteração no conteúdo com UUID
+cal.extra.append(f"X-GENERATED-ID:{uuid4()}")
 
 # Guardar o calendário
 with open("wwe_calendar.ics", "w") as f:
