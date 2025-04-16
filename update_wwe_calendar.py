@@ -31,7 +31,7 @@ for i in range(52):
     event.description = "WWE Friday Night SmackDown (hora de Lisboa)"
     cal.events.add(event)
 
-# PPVs confirmados (data e hora podem ser ajustados futuramente)
+# PPVs confirmados
 ppvs = [
     ("Backlash France", "2025-05-04 01:00"),
     ("King and Queen of the Ring", "2025-05-25 01:00"),
@@ -53,8 +53,13 @@ for name, date_str in ppvs:
     event.description = f"Evento especial WWE - {name}"
     cal.events.add(event)
 
-# Forçar sempre alteração no conteúdo com UUID
-cal.extra.append(f"X-GENERATED-ID:{uuid4()}")
+# Adiciona um evento invisível com UUID só para forçar commit
+event = Event()
+event.name = f"update-id-{uuid4()}"
+event.begin = tz.localize(datetime.now())
+event.duration = timedelta(minutes=1)
+event.description = "Evento técnico invisível para garantir atualização do ficheiro"
+cal.events.add(event)
 
 # Guardar o calendário
 with open("wwe_calendar.ics", "w") as f:
