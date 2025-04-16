@@ -1,0 +1,35 @@
+name: Atualizar calendário da WWE
+
+on:
+  schedule:
+    - cron: '0 7 * * *'  # Todos os dias às 07:00 (hora de Lisboa)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Instalar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependências
+        run: |
+          pip install ics pytz
+
+      - name: Correr o script de atualização
+        run: python update_wwe_calendar.py
+
+      - name: Commit e push das alterações
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add wwe_calendar.ics
+          git commit -m "Atualização automática do calendário da WWE"
+          git push
+        continue-on-error: true
